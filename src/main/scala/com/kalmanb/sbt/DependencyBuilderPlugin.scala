@@ -10,19 +10,21 @@ object DependencyBuilderPlugin extends Plugin {
   val dependencyBuilderSettings = Seq[Setting[_]](
     kalKey <<= (thisProjectRef, buildStructure, state) map {
       (thisProjectRef, structure, state) ⇒
-
-        val missingDependencies: Seq[ModuleID] = getMissingDependencies(thisProjectRef, state)
-
-        val modulesToBuild = for {
-          ref ← structure.allProjectRefs
-          if (missingDependencies.exists(d ⇒ d.name startsWith ref.project))
-        } yield ref
-
-        modulesToBuild foreach (publishLocalModule(_, state))
-
-        evaluateTask(Keys.update in configuration, thisProjectRef, state)
+        update(thisProjectRef, state)
     }
   )
+
+  def update(project: ProjectRef, state: State): Unit = {
+    
+    val missingDependencies: Seq[ModuleID] = getMissingDependencies(project, state)
+    val allProjectRefs = Project.extract(state).structure.allProjectRefs
+
+    val modulesToBuild = allProjectRefs.filter(ref => missingDependencies.exists(d ⇒ d.name startsWith ref.project))
+
+    modulesToBuild foreach (publishLocalModule(_, state))
+
+    evaluateTask(Keys.update in configuration, project, state)
+  }
 
   def getMissingDependencies(ref: ProjectRef, state: State): Seq[ModuleID] = {
     evaluateTask(Keys.update in configuration, ref, state) match {

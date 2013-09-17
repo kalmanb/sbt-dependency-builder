@@ -1,20 +1,13 @@
-import sbt._
+import sbt.Keys._
 import sbt.Project._
-import Keys._
+import sbt._
+
 import com.kalmanb.sbt.DependencyBuilderPlugin._
 
 object SbtJenkins extends Build {
   val projectName = "sbt-test"
   val buildVersion = "0.1.0-SNAPSHOT"
   val Org = "com.kalmanb"
-
-  //lazy val root = Project(
-  //id = projectName,
-  //base = file("."),
-  //settings = Seq(
-  //version := buildVersion,
-  //libraryDependencies ++= Seq()
-  //) ++ Project.defaultSettings ++ dependencyBuilderSettings)
 
   lazy val moduleone = Project(
     id = "moduleone",
@@ -31,8 +24,8 @@ object SbtJenkins extends Build {
     base = file("moduletwo"),
     settings = Seq(
       organization := Org,
-      version := buildVersion,
-      libraryDependencies ++= Seq(Org %% "modulethree" % buildVersion)
+      version := buildVersion
+      //libraryDependencies ++= Seq(Org %% "modulethree" % buildVersion)
     ) ++ defaultSettings ++ dependencyBuilderSettings
   )
 
