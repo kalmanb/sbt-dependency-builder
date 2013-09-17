@@ -6,22 +6,20 @@ import sbt._
 
 object DependencyBuilderPlugin extends Plugin {
 
-  val kalKey = TaskKey[Unit]("kal")
+  val taskKey = TaskKey[Unit]("publishLocalAll", "Will publishLocal the current projects. If during update it can't find a module that exists in the build file it will build it")
   val dependencyBuilderSettings = Seq[Setting[_]](
-    kalKey <<= (thisProjectRef, buildStructure, state) map {
+    taskK, y <<= (thisProjectRef, buildStructure, state) map {
       (thisProjectRef, structure, state) ⇒
         update(thisProjectRef, state)
     }
   )
 
   def update(project: ProjectRef, state: State): Unit = {
-
     val missingDependencies: Seq[ModuleID] = getMissingDependencies(project, state)
     val allProjectRefs = Project.extract(state).structure.allProjectRefs
 
     val modulesToBuild = allProjectRefs.filter(ref ⇒ missingDependencies.exists(d ⇒ d.name startsWith ref.project))
 
-    //modulesToBuild foreach (publishLocalModule(_, state))
     modulesToBuild foreach (update(_, state))
 
     evaluateTask(Keys.publishLocal in configuration, project, state)
