@@ -11,7 +11,7 @@ object DependencyBuilderPlugin extends Plugin {
     kalKey <<= (thisProjectRef, buildStructure, state) map {
       (thisProjectRef, structure, state) ⇒
 
-        val missingDependencies = getMissingDependencies(thisProjectRef, state)
+        val missingDependencies: Seq[ModuleID] = getMissingDependencies(thisProjectRef, state)
 
         val modulesToBuild = for {
           ref ← structure.allProjectRefs
