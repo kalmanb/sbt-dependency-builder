@@ -15,15 +15,16 @@ object DependencyBuilderPlugin extends Plugin {
   )
 
   def update(project: ProjectRef, state: State): Unit = {
-    
+
     val missingDependencies: Seq[ModuleID] = getMissingDependencies(project, state)
     val allProjectRefs = Project.extract(state).structure.allProjectRefs
 
-    val modulesToBuild = allProjectRefs.filter(ref => missingDependencies.exists(d ⇒ d.name startsWith ref.project))
+    val modulesToBuild = allProjectRefs.filter(ref ⇒ missingDependencies.exists(d ⇒ d.name startsWith ref.project))
 
-    modulesToBuild foreach (publishLocalModule(_, state))
+    //modulesToBuild foreach (publishLocalModule(_, state))
+    modulesToBuild foreach (update(_, state))
 
-    evaluateTask(Keys.update in configuration, project, state)
+    evaluateTask(Keys.publishLocal in configuration, project, state)
   }
 
   def getMissingDependencies(ref: ProjectRef, state: State): Seq[ModuleID] = {
