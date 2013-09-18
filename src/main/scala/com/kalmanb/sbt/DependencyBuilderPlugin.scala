@@ -8,7 +8,7 @@ object DependencyBuilderPlugin extends Plugin {
 
   val taskKey = TaskKey[Unit]("publishLocalAll", "Will publishLocal the current projects. If during update it can't find a module that exists in the build file it will build it")
   val dependencyBuilderSettings = Seq[Setting[_]](
-    taskK, y <<= (thisProjectRef, buildStructure, state) map {
+    taskKey <<= (thisProjectRef, buildStructure, state) map {
       (thisProjectRef, structure, state) ⇒
         update(thisProjectRef, state)
     }

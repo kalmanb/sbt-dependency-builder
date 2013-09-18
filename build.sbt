@@ -2,7 +2,7 @@ organization := "com.kalmanb"
             
 name := "sbt-dependency-builder"
 
-version := "0.1.0-SNAPSHOT"
+version := "0.1.0"
 
 sbtPlugin := true
 
@@ -12,6 +12,8 @@ publishArtifact in Test := false
 
 //sbtVersion in Global := "0.13.0"
 sbtVersion in Global := "0.12.4"
+
+scalaVersion := "2.9.2"
 
 //publishTo := Some(Resolver.url("repo", url("http://"))(Resolver.ivyStylePatterns))
 
